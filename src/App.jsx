@@ -7,8 +7,6 @@ import {
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
 // Import the data
-import showsData from '../shows-data.json';
-
 const ShowFinderApp = () => {
   const [activeTab, setActiveTab] = useState('calendar');
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,11 +15,40 @@ const ShowFinderApp = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [detailView, setDetailView] = useState(null);
+  
+  // State for data loaded from JSON
+  const [shows, setShows] = useState([]);
+  const [venues, setVenues] = useState([]);
+  const [artists, setArtists] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Load data from JSON file
-  const shows = showsData.shows;
-  const venues = showsData.venues;
-  const artists = showsData.artists;
+  // Load data from public folder
+  useEffect(() => {
+    fetch('/shows-data.json')
+      .then(response => response.json())
+      .then(data => {
+        setShows(data.shows);
+        setVenues(data.venues);
+        setArtists(data.artists);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error loading data:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="max-w-sm mx-auto bg-gray-50 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Music className="w-12 h-12 text-blue-600 mx-auto mb-4 animate-pulse" />
+          <p className="text-gray-600">Loading shows...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Analytics data
   const monthlyRevenue = [
