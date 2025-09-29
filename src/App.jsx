@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   MapPin, Music, Plus, Search, Star, Calendar, Clock, 
   DollarSign, Users, TrendingUp, BarChart3,
   ChevronRight, ChevronLeft, Filter, User, Bell
 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+
+// Import the data
+import showsData from '../shows-data.json';
 
 const ShowFinderApp = () => {
   const [activeTab, setActiveTab] = useState('calendar');
@@ -15,150 +18,10 @@ const ShowFinderApp = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [detailView, setDetailView] = useState(null);
 
-  // Sample data
-  const venues = [
-    {
-      id: 1,
-      name: "The Local Stage",
-      address: "123 East Main St, Anytown, USA 12345",
-      capacity: 150,
-      rating: 4.8,
-      image: "🎭",
-      upcomingShows: 3,
-      description: "Intimate venue perfect for acoustic and small band performances",
-      phone: "(555) 123-4567",
-      website: "www.localstage.com"
-    },
-    {
-      id: 2,
-      name: "The Beatnik Lounge",
-      address: "456 West Broadway, Anytown, USA 12345",
-      capacity: 80,
-      rating: 4.6,
-      image: "🎷",
-      upcomingShows: 2,
-      description: "Classic jazz lounge with a sophisticated atmosphere",
-      phone: "(555) 987-6543",
-      website: "www.beatniklounge.com"
-    },
-    {
-      id: 3,
-      name: "The Vinyl Vault",
-      address: "789 South Oak St, Anytown, USA 12345",
-      capacity: 200,
-      rating: 4.9,
-      image: "💿",
-      upcomingShows: 5,
-      description: "Record store and venue celebrating vinyl culture",
-      phone: "(555) 456-7890",
-      website: "www.vinylvault.com"
-    }
-  ];
-
-  const artists = [
-    {
-      id: 1,
-      name: "The Electric Storms",
-      genre: "Rock",
-      followers: 1250,
-      upcomingShows: 3,
-      monthlyListeners: 15000,
-      image: "⚡",
-      verified: true,
-      description: "High-energy rock band known for electrifying performances and original compositions.",
-      formed: "2019",
-      members: 4,
-      website: "www.electricstorms.com"
-    },
-    {
-      id: 2,
-      name: "Sarah Moon Quartet",
-      genre: "Jazz",
-      followers: 890,
-      upcomingShows: 2,
-      monthlyListeners: 8500,
-      image: "🌙",
-      verified: true,
-      description: "Contemporary jazz ensemble led by acclaimed saxophonist Sarah Moon.",
-      formed: "2015",
-      members: 4,
-      website: "www.sarahmoon.com"
-    },
-    {
-      id: 3,
-      name: "Mountain Folk Collective",
-      genre: "Folk",
-      followers: 2100,
-      upcomingShows: 4,
-      monthlyListeners: 22000,
-      image: "🏔️",
-      verified: false,
-      description: "Community-based folk group celebrating traditional mountain music and storytelling.",
-      formed: "2020",
-      members: 6,
-      website: "www.mountainfolk.com"
-    }
-  ];
-
-  const shows = [
-    {
-      id: 1,
-      title: "Electric Storm Live",
-      artist: "The Electric Storms",
-      venue: "The Local Stage",
-      venueId: 1,
-      artistId: 1,
-      date: "2025-09-22",
-      time: "20:00",
-      price: 25,
-      genre: "Rock",
-      attendees: 85,
-      capacity: 150,
-      image: "⚡",
-      description: "High-energy rock performance with special guest appearances and extended set list featuring new material.",
-      ticketsAvailable: 65,
-      ageRestriction: "18+",
-      doorTime: "19:00"
-    },
-    {
-      id: 2,
-      title: "Jazz Under the Stars",
-      artist: "Sarah Moon Quartet",
-      venue: "The Beatnik Lounge",
-      venueId: 2,
-      artistId: 2,
-      date: "2025-09-22",
-      time: "19:30",
-      price: 18,
-      genre: "Jazz",
-      attendees: 45,
-      capacity: 80,
-      image: "🌙",
-      description: "Intimate jazz evening featuring original compositions and classic standards in our cozy lounge setting.",
-      ticketsAvailable: 35,
-      ageRestriction: "21+",
-      doorTime: "19:00"
-    },
-    {
-      id: 3,
-      title: "Mountain Folk Festival",
-      artist: "Mountain Folk Collective",
-      venue: "The Vinyl Vault",
-      venueId: 3,
-      artistId: 3,
-      date: "2025-09-25",
-      time: "15:00",
-      price: 0,
-      genre: "Folk",
-      attendees: 120,
-      capacity: 200,
-      image: "🏔️",
-      description: "Free outdoor festival celebrating folk music traditions with multiple artists and food trucks.",
-      ticketsAvailable: 80,
-      ageRestriction: "All ages",
-      doorTime: "14:30"
-    }
-  ];
+  // Load data from JSON file
+  const shows = showsData.shows;
+  const venues = showsData.venues;
+  const artists = showsData.artists;
 
   // Analytics data
   const monthlyRevenue = [
